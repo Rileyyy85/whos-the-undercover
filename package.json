@@ -1,0 +1,17 @@
+{
+  "name": "whos-the-undercover",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Who's the Undercover? A multiplayer word-bluffing party game for virtual team building.",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "postinstall": "npm install --prefix server && npm install --prefix client --include=dev",
+    "dev": "node scripts/dev.mjs",
+    "build": "npm run build --prefix client",
+    "start": "node server/index.js",
+    "test": "npm test --prefix server"
+  }
+}
