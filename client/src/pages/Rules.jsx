@@ -12,9 +12,9 @@ const TABS = {
           laptop, and the host shares the main screen on Zoom.
         </p>
         <p>
-          Most players (the <b className="text-civilian">Civilians</b>) get the same secret word. One or two players (the{' '}
-          <b className="text-undercover">Undercover</b>) get a similar but different word. Sometimes there is also a{' '}
-          <b className="text-mrwhite">Mr. White</b> who gets no word at all.
+          Most players (the <b className="text-[#8fd0ff]">Civilians</b>) get the same secret word. One or two players (the{' '}
+          <b className="text-[#ff8a9b]">Undercover</b>) get a similar but different word. Sometimes there is also a{' '}
+          <b className="text-[#dcb4ff]">Mr. White</b> who gets no word at all.
         </p>
         <p>
           Take turns giving a short clue about your word, discuss, then vote someone out. Find the infiltrators before they
@@ -39,7 +39,7 @@ const TABS = {
           <RoleTag role="mrwhite" /> Gets no word. Their screen says “You are Mr. White — blend in!”. Only used with 5+
           players.
         </p>
-        <p className="rounded-2xl bg-white/5 p-4">
+        <p className="rounded-2xl bg-deep/40 p-4">
           🤫 <b>Important:</b> you only see a word, not your role. You don&apos;t know if you&apos;re a Civilian or the
           Undercover. Listen carefully to the others!
         </p>
@@ -72,7 +72,7 @@ const TABS = {
           <li>The player with the most votes is eliminated and their role is revealed.</li>
           <li>Tie? The host chooses a re-vote between the tied players, or no elimination this round.</li>
           <li>
-            If <b className="text-mrwhite">Mr. White</b> is eliminated, they get one secret guess at the Civilians&apos;
+            If <b className="text-[#dcb4ff]">Mr. White</b> is eliminated, they get one secret guess at the Civilians&apos;
             word. A correct guess wins the game!
           </li>
         </ul>
@@ -102,8 +102,8 @@ const TABS = {
     body: (
       <>
         <p>
-          Six players. Civilians have <b className="text-civilian">Tea</b>, the Undercover has{' '}
-          <b className="text-undercover">Coffee</b>, and one player is <b className="text-mrwhite">Mr. White</b>.
+          Six players. Civilians have <b className="text-[#8fd0ff]">Tea</b>, the Undercover has{' '}
+          <b className="text-[#ff8a9b]">Coffee</b>, and one player is <b className="text-[#dcb4ff]">Mr. White</b>.
         </p>
         <ol className="list-decimal pl-6 space-y-1">
           <li>Amy (Civilian): “leaves”</li>
@@ -139,13 +139,13 @@ export default function Rules() {
           ← Home
         </Link>
       </div>
-      <h1 className="text-3xl sm:text-4xl font-black mb-4">How to Play</h1>
+      <h1 className="text-3xl sm:text-4xl font-display font-bold mb-4">How to Play</h1>
       <div className="flex flex-wrap gap-2 mb-6">
         {Object.entries(TABS).map(([k, t]) => (
           <button
             key={k}
             onClick={() => choose(k)}
-            className={`rounded-full px-4 py-2 font-bold transition ${tab === k ? 'bg-civilian text-white' : 'bg-white/10 hover:bg-white/20'}`}
+            className={`rounded-full px-4 py-2 font-bold transition ${tab === k ? 'bg-gold text-grape shadow-[0_4px_0_#c78f00]' : 'bg-white/15 hover:bg-white/25'}`}
           >
             {t.title}
           </button>

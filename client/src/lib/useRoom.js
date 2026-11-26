@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { createSocket } from './socket.js';
+import { registerAvatars } from '../components/ui.jsx';
 
 /**
  * Connects to the server and attaches to a room as host or player.
@@ -32,6 +33,7 @@ export function useRoom({ code, kind, token }) {
     socket.on('disconnect', () => setConnected(false));
     socket.on('state', (s) => {
       setClockOffset(s.serverNow - Date.now());
+      registerAvatars(s.players.map((p) => p.id));
       setState(s);
     });
     socket.on('kicked', () => setFatal('kicked'));

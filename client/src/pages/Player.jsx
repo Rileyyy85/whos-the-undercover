@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { useRoom } from '../lib/useRoom.js';
 import { tokens } from '../lib/storage.js';
-import { Button, Card, ClueBoard, ConnectionBanner, RoleTag, TimerBar, VoteReveal } from '../components/ui.jsx';
+import { Avatar, Button, Card, ClueBoard, CodePill, ConnectionBanner, RoleTag, TILES, TimerBar, VoteReveal } from '../components/ui.jsx';
 import { EliminationCard, FinalRoles, WinnerBanner, phaseTitle } from '../components/game.jsx';
 
 function Message({ title, children }) {
   return (
     <div className="min-h-screen grid place-items-center p-6 text-center">
       <Card className="p-8 max-w-md">
-        <h1 className="text-3xl font-black mb-3">{title}</h1>
+        <h1 className="text-3xl font-display font-bold mb-3">{title}</h1>
         <div className="text-lg text-white/80 space-y-4">{children}</div>
       </Card>
     </div>
@@ -24,30 +24,35 @@ function WordCard({ me, gameNumber }) {
   return (
     <button
       onClick={() => setShown((v) => !v)}
-      className={`w-full rounded-3xl p-6 text-center select-none transition active:scale-[0.98] ring-2 ${
-        shown ? (me.isMrWhite ? 'bg-mrwhite/25 ring-mrwhite' : 'bg-panel2 ring-white/30') : 'bg-panel ring-white/10'
+      className={`w-full rounded-[28px] p-6 text-center select-none transition active:translate-y-1 ${
+        shown
+          ? me.isMrWhite
+            ? 'bg-mrwhite text-white shadow-[0_8px_0_#6a1fb3]'
+            : 'bg-white text-grape shadow-[0_8px_0_#c9b6ee]'
+          : 'bg-gradient-to-br from-[#7b3fe4] to-[#5a1fc0] ring-4 ring-white/20 shadow-[0_8px_0_rgba(20,4,50,0.5)]'
       }`}
     >
       {shown ? (
         me.isMrWhite ? (
           <div className="animate-flip">
             <div className="text-5xl mb-2">👻</div>
-            <div className="text-2xl font-black text-mrwhite">You are Mr. White</div>
+            <div className="text-3xl font-display font-bold">You are Mr. White</div>
             <div className="text-xl">You have no word. Blend in!</div>
           </div>
         ) : (
           <div className="animate-flip">
-            <div className="text-white/60 text-lg">Your secret word</div>
-            <div className="text-5xl font-black my-2 break-words">{me.word}</div>
+            <div className="text-grape/60 text-base tracking-widest">YOUR SECRET WORD</div>
+            <div className="text-6xl font-display font-bold my-2 break-words">{me.word}</div>
           </div>
         )
       ) : (
         <div>
-          <div className="text-5xl mb-2">🙈</div>
-          <div className="text-2xl font-bold">Tap to reveal your word</div>
+          <div className="text-6xl mb-2 inline-block animate-wiggle">🔑</div>
+          <div className="text-2xl font-display font-bold">Tap to reveal your word</div>
+          <div className="text-white/70 text-sm mt-1">Keep it hidden from your camera!</div>
         </div>
       )}
-      {shown && <div className="text-white/50 text-sm mt-3">Tap to hide</div>}
+      {shown && <div className="opacity-60 text-sm mt-3">Tap to hide</div>}
     </button>
   );
 }
@@ -66,9 +71,9 @@ function ClueInput({ emit, onError }) {
   };
   return (
     <form onSubmit={submit} className="space-y-3 animate-pop">
-      <p className="text-3xl font-black text-amber-300 text-center">🎤 Your turn!</p>
+      <p className="text-3xl font-display font-bold text-gold text-center">🎤 Your turn!</p>
       <input
-        className="w-full rounded-2xl bg-ink/70 ring-2 ring-amber-300 px-4 py-4 text-2xl outline-none"
+        className="w-full rounded-2xl bg-white text-grape ring-4 ring-gold px-4 py-4 text-2xl font-display outline-none placeholder:text-grape/40"
         value={text}
         maxLength={30}
         onChange={(e) => setText(e.target.value)}
@@ -81,7 +86,7 @@ function ClueInput({ emit, onError }) {
         <span>Don&apos;t say your word itself!</span>
         <span>{text.length}/30</span>
       </div>
-      <Button type="submit" size="lg" variant="warn" className="w-full" disabled={busy || !text.trim()}>
+      <Button type="submit" size="lg" variant="coral" className="w-full" disabled={busy || !text.trim()}>
         Send clue
       </Button>
     </form>
@@ -100,11 +105,11 @@ function GuessInput({ emit, onError }) {
     if (res?.error) onError(res.error);
   };
   return (
-    <form onSubmit={submit} className="space-y-3 rounded-3xl bg-mrwhite/20 ring-2 ring-mrwhite p-5 animate-pop">
-      <p className="text-2xl font-black text-center">👻 One secret guess!</p>
-      <p className="text-center text-white/80">What is the Civilians&apos; word? Guess right and you win.</p>
+    <form onSubmit={submit} className="space-y-3 rounded-[28px] bg-mrwhite p-5 shadow-[0_8px_0_#6a1fb3] animate-pop">
+      <p className="text-2xl font-display font-bold text-center">👻 One secret guess!</p>
+      <p className="text-center text-white/90">What is the Civilians&apos; word? Guess right and you win.</p>
       <input
-        className="w-full rounded-2xl bg-ink/70 ring-2 ring-mrwhite px-4 py-4 text-2xl outline-none"
+        className="w-full rounded-2xl bg-white text-grape ring-4 ring-mrwhite px-4 py-4 text-2xl font-display outline-none placeholder:text-grape/40"
         value={guess}
         maxLength={30}
         onChange={(e) => setGuess(e.target.value)}
@@ -112,7 +117,7 @@ function GuessInput({ emit, onError }) {
         autoFocus
         autoComplete="off"
       />
-      <Button type="submit" size="lg" variant="purple" className="w-full" disabled={busy || !guess.trim()}>
+      <Button type="submit" size="lg" variant="warn" className="w-full" disabled={busy || !guess.trim()}>
         Submit guess
       </Button>
     </form>
@@ -141,7 +146,7 @@ export default function Player() {
     return (
       <Message title="You were removed">
         <p>The host removed you from room {code}.</p>
-        <Link className="underline text-civilian" to={`/join?code=${code}`}>Join again</Link>
+        <Link className="underline text-gold" to={`/join?code=${code}`}>Join again</Link>
       </Message>
     );
   }
@@ -149,7 +154,7 @@ export default function Player() {
     return (
       <Message title={fatal === 'not_found' ? 'Room not found' : 'Seat not found'}>
         <p>{fatal === 'not_found' ? `Room ${code} no longer exists. Ask your host for the new code.` : 'Please join the room again.'}</p>
-        <Link className="underline text-civilian" to={`/join?code=${code}`}>Go to Join</Link>
+        <Link className="underline text-gold" to={`/join?code=${code}`}>Go to Join</Link>
       </Message>
     );
   }
@@ -196,32 +201,32 @@ export default function Player() {
       <ConnectionBanner connected={connected} hostConnected={s.hostConnected} />
 
       <header className="flex items-center justify-between pt-2">
-        <div>
-          <div className="text-white/50 text-sm">Playing as</div>
-          <div className="text-2xl font-black">{me.name}</div>
+        <div className="flex items-center gap-3">
+          <Avatar id={me.id} size={44} />
+          <div>
+            <div className="text-white/60 text-sm">Playing as</div>
+            <div className="text-2xl font-display font-bold leading-tight">{me.name}</div>
+          </div>
         </div>
-        <div className="text-right">
-          <div className="text-white/50 text-sm">Room</div>
-          <div className="font-mono font-black text-2xl tracking-widest text-amber-300">{s.code}</div>
-        </div>
+        <CodePill code={s.code} size="sm" />
       </header>
 
-      <div className="rounded-2xl bg-panel px-4 py-2 text-center text-xl font-bold ring-1 ring-white/10">{phaseTitle(s)}</div>
+      <div className="rounded-2xl bg-white text-grape px-4 py-2 text-center text-xl font-display font-bold shadow-[0_5px_0_#c9b6ee]">{phaseTitle(s)}</div>
 
       {eliminated && (
-        <div className="rounded-2xl bg-white/10 p-4 text-center text-lg font-bold">
+        <div className="rounded-2xl bg-deep/50 ring-2 ring-white/15 p-4 text-center text-lg font-bold">
           ☠ You&apos;ve been eliminated. You can still watch!
         </div>
       )}
       {spectator && (
-        <div className="rounded-2xl bg-white/10 p-4 text-center text-lg font-bold">
+        <div className="rounded-2xl bg-deep/50 ring-2 ring-white/15 p-4 text-center text-lg font-bold">
           👀 A game is in progress. You&apos;ll be dealt in next round!
         </div>
       )}
 
       {s.phase !== 'gameover' && <WordCard me={me} gameNumber={s.gameNumber} />}
 
-      {error && <div className="rounded-2xl bg-undercover/30 ring-1 ring-undercover p-3 text-center font-bold">{error}</div>}
+      {error && <div className="rounded-2xl bg-k-red p-3 text-center font-bold shadow-[0_5px_0_#a3102a]">{error}</div>}
 
       {s.phase === 'lobby' && (
         <Card className="p-5 text-center">
@@ -229,7 +234,8 @@ export default function Player() {
           <p className="text-white/70 mb-4">Waiting for the host to start…</p>
           <div className="flex flex-wrap gap-2 justify-center">
             {s.players.map((p) => (
-              <span key={p.id} className={`rounded-full px-3 py-1 ${p.id === me.id ? 'bg-civilian' : 'bg-white/10'}`}>
+              <span key={p.id} className={`inline-flex items-center gap-2 rounded-full pl-1 pr-3 py-1 font-display ${p.id === me.id ? 'bg-gold text-grape' : 'bg-white text-grape'}`}>
+                <Avatar id={p.id} size={28} />
                 {p.name}
               </span>
             ))}
@@ -248,7 +254,7 @@ export default function Player() {
             <p className="text-xl text-center">
               {speaker ? (
                 <>
-                  Waiting for <b className="text-amber-300">{speaker.name}</b> to give a clue…
+                  Waiting for <b className="text-gold">{speaker.name}</b> to give a clue…
                 </>
               ) : (
                 'All clues are in!'
@@ -280,17 +286,27 @@ export default function Player() {
                 {me.myVote ? `You voted for ${nameOf(me.myVote)}. You can change it until the reveal.` : 'Tap a player to vote.'}
               </p>
               <div className="grid grid-cols-2 gap-3">
-                {me.votable.map((id) => (
-                  <button
-                    key={id}
-                    onClick={() => vote(id)}
-                    className={`rounded-2xl px-3 py-5 text-xl font-bold transition active:scale-95 ${
-                      me.myVote === id ? 'bg-undercover ring-4 ring-white' : 'bg-panel2 hover:bg-white/15'
-                    }`}
-                  >
-                    {nameOf(id)}
-                  </button>
-                ))}
+                {me.votable.map((id, i) => {
+                  const tile = TILES[i % TILES.length];
+                  const picked = me.myVote === id;
+                  return (
+                    <button
+                      key={id}
+                      onClick={() => vote(id)}
+                      style={{ boxShadow: picked ? 'none' : `0 6px 0 ${tile.edge}` }}
+                      className={`relative rounded-2xl px-3 py-5 text-xl font-display font-bold text-white transition ${tile.bg} ${
+                        picked ? 'translate-y-1 ring-4 ring-white scale-105' : me.myVote ? 'opacity-75 saturate-75' : ''
+                      }`}
+                    >
+                      <span className="absolute left-2 top-1 text-sm opacity-70">{tile.shape}</span>
+                      <span className="flex flex-col items-center gap-1">
+                        <Avatar id={id} size={36} />
+                        {nameOf(id)}
+                      </span>
+                      {picked && <span className="absolute right-2 top-1">✔</span>}
+                    </button>
+                  );
+                })}
               </div>
             </>
           ) : (
@@ -305,7 +321,7 @@ export default function Player() {
       {s.phase === 'reveal' && (
         <Card className="p-5">
           <VoteReveal reveal={s.reveal} />
-          {s.reveal?.tie && <p className="text-center font-black text-amber-300 text-2xl mt-4">It&apos;s a tie!</p>}
+          {s.reveal?.tie && <p className="text-center font-display font-bold text-gold text-2xl mt-4">It&apos;s a tie!</p>}
         </Card>
       )}
 
@@ -332,7 +348,7 @@ export default function Player() {
 
       {s.gameNumber > 0 && !['gameover', 'lobby'].includes(s.phase) && (
         <Card className="p-4">
-          <h2 className="font-bold text-white/60 mb-2">📋 Clues</h2>
+          <h2 className="font-display font-bold text-white/80 mb-2">📋 Clues</h2>
           <ClueBoard clues={s.clues} cycle={s.cycle} />
         </Card>
       )}

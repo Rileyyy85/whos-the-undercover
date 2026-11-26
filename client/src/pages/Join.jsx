@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useRef } from 'react';
 import { Button, Card, Logo } from '../components/ui.jsx';
 import { lastName, tokens } from '../lib/storage.js';
 
@@ -39,30 +40,23 @@ export default function Join() {
   };
 
   const input =
-    'w-full rounded-2xl bg-ink/70 ring-1 ring-white/15 px-4 py-4 text-2xl outline-none focus:ring-2 focus:ring-civilian';
+    'w-full rounded-2xl bg-white text-grape px-4 py-4 text-2xl font-display outline-none ring-4 ring-transparent focus:ring-gold placeholder:text-grape/40';
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-5">
       <Link to="/" className="mb-6">
         <Logo className="text-3xl text-center" />
       </Link>
-      <Card className="w-full max-w-md p-6">
-        <h1 className="text-3xl font-black mb-6 text-center">Join a Game</h1>
+      <Card className="w-full max-w-md p-6 sm:p-8">
+        <div className="text-6xl text-center mb-2 animate-wiggle">🔑</div>
+        <h1 className="text-3xl font-display font-bold mb-6 text-center">Join a Game</h1>
         <form onSubmit={submit} className="space-y-4">
           <label className="block">
-            <span className="text-white/70 font-bold">Room code</span>
-            <input
-              className={`${input} tracking-[0.3em] uppercase font-mono text-center`}
-              value={code}
-              onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))}
-              placeholder="ABC123"
-              autoCapitalize="characters"
-              autoComplete="off"
-              inputMode="text"
-            />
+            <span className="text-white/80 font-bold block mb-2">Room code</span>
+            <CodeBoxes value={code} onChange={setCode} />
           </label>
           <label className="block">
-            <span className="text-white/70 font-bold">Your name</span>
+            <span className="text-white/80 font-bold block mb-2">Your name</span>
             <input
               className={input}
               value={name}
@@ -74,7 +68,7 @@ export default function Join() {
             />
           </label>
           {error && <p className="text-undercover font-bold">{error}</p>}
-          <Button type="submit" size="lg" className="w-full" disabled={busy}>
+          <Button type="submit" size="lg" variant="coral" className="w-full" disabled={busy}>
             {busy ? 'Joining…' : 'Join'}
           </Button>
         </form>
@@ -82,6 +76,37 @@ export default function Join() {
       <Link to="/rules" className="mt-6 text-white/60 hover:text-white underline">
         How to play
       </Link>
+    </div>
+  );
+}
+
+/** Six chunky boxes for the room code, backed by one real input (works with phone keyboards and paste). */
+function CodeBoxes({ value, onChange }) {
+  const ref = useRef(null);
+  const chars = value.padEnd(6, ' ').split('');
+  return (
+    <div className="relative" onClick={() => ref.current?.focus()}>
+      <input
+        ref={ref}
+        className="absolute inset-0 w-full h-full opacity-0"
+        value={value}
+        onChange={(e) => onChange(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6))}
+        autoCapitalize="characters"
+        autoComplete="off"
+        aria-label="Room code"
+      />
+      <div className="grid grid-cols-6 gap-2 pointer-events-none">
+        {chars.map((c, i) => (
+          <div
+            key={i}
+            className={`aspect-[4/5] grid place-items-center rounded-xl text-3xl font-display font-bold shadow-[0_5px_0_rgba(20,4,50,0.4)] ${
+              c.trim() ? 'bg-white text-grape' : i === value.length ? 'bg-white/30 ring-4 ring-gold' : 'bg-white/15'
+            }`}
+          >
+            {c.trim()}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

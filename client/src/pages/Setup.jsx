@@ -84,7 +84,7 @@ export default function Setup() {
   };
 
   const input =
-    'w-full rounded-xl bg-ink/70 ring-1 ring-white/15 px-3 py-2 text-lg outline-none focus:ring-2 focus:ring-civilian';
+    'w-full rounded-xl bg-white text-grape px-3 py-2 text-lg font-display outline-none ring-4 ring-transparent focus:ring-gold placeholder:text-grape/40';
 
   return (
     <div className="min-h-screen p-4 sm:p-8 max-w-4xl mx-auto">
@@ -96,10 +96,10 @@ export default function Setup() {
           Rules →
         </Link>
       </div>
-      <h1 className="text-3xl sm:text-4xl font-black mb-1">Host setup</h1>
-      <p className="text-white/60 mb-6 text-lg">
-        Word A goes to the <b className="text-undercover">Undercover</b>, Word B to the{' '}
-        <b className="text-civilian">Civilians</b>. We recommend 5–7 pairs for a 45-minute session. Pairs are played in
+      <h1 className="text-3xl sm:text-4xl font-display font-bold mb-1">Host setup</h1>
+      <p className="text-white/80 mb-6 text-lg">
+        Word A goes to the <b className="text-[#ff8a9b]">Undercover</b>, Word B to the{' '}
+        <b className="text-[#8fd0ff]">Civilians</b>. We recommend 5–7 pairs for a 45-minute session. Pairs are played in
         this order.
       </p>
 
@@ -118,9 +118,9 @@ export default function Setup() {
       <Card className="p-4 sm:p-6 mb-6">
         <div className="hidden sm:grid grid-cols-[2rem_1fr_1fr_7rem_6rem] gap-2 text-sm text-white/50 font-bold mb-2 px-1">
           <span>#</span>
-          <span className="text-undercover">Word A (Undercover)</span>
-          <span className="text-civilian">Word B (Civilians)</span>
-          <span className="text-mrwhite">Mr. White</span>
+          <span className="text-[#ff8a9b]">Word A (Undercover)</span>
+          <span className="text-[#8fd0ff]">Word B (Civilians)</span>
+          <span className="text-[#dcb4ff]">Mr. White</span>
           <span />
         </div>
         {pairs.length === 0 && <p className="text-white/50 italic p-2">No pairs yet. Load the defaults or add your own.</p>}
@@ -128,9 +128,9 @@ export default function Setup() {
           {pairs.map((p, i) => (
             <div
               key={i}
-              className="grid grid-cols-[2rem_1fr_1fr] sm:grid-cols-[2rem_1fr_1fr_7rem_6rem] gap-2 items-center rounded-2xl bg-white/5 p-2"
+              className="grid grid-cols-[2rem_1fr_1fr] sm:grid-cols-[2rem_1fr_1fr_7rem_6rem] gap-2 items-center rounded-2xl bg-deep/40 p-2"
             >
-              <span className="text-white/50 font-bold text-center">{i + 1}</span>
+              <span className="text-gold font-display font-bold text-center text-xl">{i + 1}</span>
               <input className={input} value={p.a} maxLength={30} onChange={(e) => update(i, { a: e.target.value })} aria-label="Word A" />
               <input className={input} value={p.b} maxLength={30} onChange={(e) => update(i, { b: e.target.value })} aria-label="Word B" />
               <label className="col-start-2 sm:col-start-auto flex items-center gap-2 cursor-pointer select-none">
@@ -149,7 +149,7 @@ export default function Setup() {
                 <button className="rounded-lg bg-white/10 hover:bg-white/20 size-9" onClick={() => move(i, 1)} aria-label="Move down">
                   ↓
                 </button>
-                <button className="rounded-lg bg-undercover/70 hover:bg-undercover size-9" onClick={() => remove(i)} aria-label="Delete">
+                <button className="rounded-lg bg-k-red hover:brightness-110 size-9" onClick={() => remove(i)} aria-label="Delete">
                   ✕
                 </button>
               </div>
@@ -160,7 +160,7 @@ export default function Setup() {
         <form onSubmit={add} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-2 mt-4 pt-4 border-t border-white/10">
           <input className={input} placeholder="Word A (Undercover)" value={draft.a} maxLength={30} onChange={(e) => setDraft({ ...draft, a: e.target.value })} />
           <input className={input} placeholder="Word B (Civilians)" value={draft.b} maxLength={30} onChange={(e) => setDraft({ ...draft, b: e.target.value })} />
-          <Button size="sm" type="submit">
+          <Button size="sm" type="submit" variant="warn">
             + Add pair
           </Button>
         </form>
@@ -179,7 +179,7 @@ export default function Setup() {
         <label className="flex items-center gap-3">
           Discussion timer
           <select
-            className="rounded-xl bg-ink ring-1 ring-white/15 px-3 py-2"
+            className="rounded-xl bg-white text-grape px-3 py-2"
             value={settings.discussionSeconds}
             onChange={(e) => setSettings({ ...settings, discussionSeconds: Number(e.target.value) })}
           >
@@ -190,9 +190,9 @@ export default function Setup() {
         </label>
       </Card>
 
-      {error && <p className="text-undercover font-bold mb-4 text-lg">{error}</p>}
+      {error && <p className="text-[#ff8a9b] font-bold mb-4 text-lg">{error}</p>}
       <div className="flex items-center gap-4 flex-wrap">
-        <Button size="lg" variant="danger" onClick={create} disabled={busy || valid.length === 0}>
+        <Button size="lg" variant="coral" onClick={create} disabled={busy || valid.length === 0}>
           {busy ? 'Creating…' : 'Save & Generate Room'}
         </Button>
         <span className="text-white/60">
